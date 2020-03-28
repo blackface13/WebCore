@@ -15,5 +15,6 @@ namespace APIGame.CoreBase
 
         public DbSet<BreakBallEntity> BreakBall { get; set; }//Đập bóng
         public DbSet<HourRewardEntity> HourReward { get; set; }//Nhận thưởng hàng ngày
+        public DbSet<Player> Player { get; set; }//Nhận thưởng hàng ngày
     }
 }

@@ -11,25 +11,49 @@ using Microsoft.Extensions.DependencyInjection;
 using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Authorization;
+using APIGame.Infrastructure.Entities;
+
 namespace APIGame.Controllers
 {
     [ApiController]
     [Route("[controller]")]
     public class HomeController : Controller
     {
-        private readonly GameDBContext GData;
-       // private readonly IHostingEnvironment Hosting;
+        private readonly GameDBContext _context;
+
+        // private readonly IHostingEnvironment Hosting;
         public HomeController(GameDBContext context)
         {
-            GData = context;
+            _context = context;
         }
 
         [AllowAnonymous]
+        //[Authorize]
         public IActionResult Index(string id)
         {
-            var a = GData.BreakBall.AsNoTracking();
+            var a = _context.BreakBall.AsNoTracking();
             var b = a.Count();
             return Ok(Security.Encrypt("Black Face"));
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Player>> TankTest(string id)
+        {
+            Player test = new Player { UserID = "fdf", Gems=50};
+
+            var tank = await _context.Player.FindAsync(test.UserID);
+            if(tank == null)
+            {
+                _context.Player.Add(test);
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateException)
+                {
+                }
+            }
+            return tank;
         }
     }
 }

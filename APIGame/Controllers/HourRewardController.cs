@@ -44,9 +44,6 @@ namespace APIGame.Controllers
             return hourRewardEntity;
         }
 
-        // PUT: api/HourReward/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
         public async Task<IActionResult> PutHourRewardEntity(string id, HourRewardEntity hourRewardEntity)
         {
@@ -76,9 +73,6 @@ namespace APIGame.Controllers
             return NoContent();
         }
 
-        // POST: api/HourReward
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
         public async Task<ActionResult<HourRewardEntity>> PostHourRewardEntity(HourRewardEntity hourRewardEntity)
         {
@@ -103,20 +97,20 @@ namespace APIGame.Controllers
         }
 
         // DELETE: api/HourReward/5
-        [HttpGet("del/{id}")]
-        public async Task<ActionResult<HourRewardEntity>> DeleteHourRewardEntity(string id)
-        {
-            var hourRewardEntity = await _context.HourReward.FindAsync(id);
-            if (hourRewardEntity == null)
-            {
-                return NotFound();
-            }
+        //[HttpGet("del/{id}")]
+        //public async Task<ActionResult<HourRewardEntity>> DeleteHourRewardEntity(string id)
+        //{
+        //    var hourRewardEntity = await _context.HourReward.FindAsync(id);
+        //    if (hourRewardEntity == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            _context.HourReward.Remove(hourRewardEntity);
-            await _context.SaveChangesAsync();
+        //    _context.HourReward.Remove(hourRewardEntity);
+        //    await _context.SaveChangesAsync();
 
-            return hourRewardEntity;
-        }
+        //    return hourRewardEntity;
+        //}
 
         private bool HourRewardEntityExists(string id)
         {
