@@ -33,13 +33,14 @@ namespace APIGame.Controllers
         {
             var a = _context.BreakBall.AsNoTracking();
             var b = a.Count();
-            return Ok(Security.Encrypt("Black Face"));
+            var t = Systems.GetTimeNowToInteger();
+            return Ok(t);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Player>> TankTest(string id)
         {
-            Player test = new Player { UserID = "fdf", Gems=50};
+            Player test = new Player { UserID = "fd4f", Gems=50};
 
             var tank = await _context.Player.FindAsync(test.UserID);
             if(tank == null)

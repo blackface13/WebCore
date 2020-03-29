@@ -74,6 +74,10 @@ namespace APIGame
             name: "default",
             pattern: "{controller=HourReward}/{action=GetHourReward}/{id?}");
 
+                endpoints.MapControllerRoute(
+            name: "default",
+            pattern: "{controller=Player}/{action=GetPlayer}/{id?}");
+
             });
         }
     }
