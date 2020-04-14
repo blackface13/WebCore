@@ -21,5 +21,6 @@ namespace APIGame.Infrastructure.Entities
         public string DifficultMap { get; set; }
         public int LastUpdate { get; set; }
         public string HWID { get; set; }
+        public bool IsChangeDevice { get; set; }//Biến này xác định có chuyển thiết bị hay ko. = true thì ko cho phép đồng bộ lên, chỉ cho phép đồng bộ xuống, sau khi đồng bộ xuống thì đẩy lại dữ liệu lên và set = false. Nếu = false thì ko phải là trạng thái đăng ký chuyển thiết bị, trùng IDHW mới cho phép đồng bộ
     }
 }

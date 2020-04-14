@@ -61,19 +61,9 @@ namespace APIGame.Controllers
             else
             {
                 if(result.HWID != dataString.HWID)
-                    return CreatedAtAction("Response", new ResponseModel { Res = Systems.State.FailedByHWID });
+                    return CreatedAtAction("Response", new ResponseModel { Res = Systems.State.SyncFailedByHWID });
 
-                result.LastUpdate = Systems.GetTimeNowToInteger();
-                result.BattleLose = dataString.BattleLose;
-                result.BattleWin = dataString.BattleWin;
-                result.DifficultMap = dataString.DifficultMap;
-                result.EnemyFutureMap = dataString.EnemyFutureMap;
-                result.Gems = dataString.Gems;
-                result.Golds = dataString.Golds;
                 result.HWID = dataString.HWID;
-                result.InventorySlot = dataString.InventorySlot;
-                result.IsAutoBattle = dataString.IsAutoBattle;
-                result.ItemUseForBattle = dataString.ItemUseForBattle;
                 result.NumberSpined = dataString.NumberSpined;
                 result.PassCode = dataString.PassCode;
                 result.UserName = dataString.UserName;
