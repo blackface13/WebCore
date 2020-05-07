@@ -17,6 +17,7 @@ namespace APIGame.CoreBase
             Connected, //Kết nối tới server thành công
             LostConnected, //Không thể kết nối tới server
             SyncFailedByHWID,//Không thể đồng bộ do đăng ký chơi trên thiết bị này nhưng đồng bộ trên thiết bị khác
+            FailedByHWID,//Không thể đồng bộ do đăng ký chơi trên thiết bị này nhưng đồng bộ trên thiết bị khác
         }
         public static State Response;
         /// <summary>

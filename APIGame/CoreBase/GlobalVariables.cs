@@ -8,5 +8,6 @@ namespace APIGame.CoreBase
 {
     public static class GlobalVariables
     {
+        public static string ChatboxPathFile = "Chatbox/chat.txt";
     }
 }

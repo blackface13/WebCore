@@ -78,6 +78,10 @@ namespace APIGame
             name: "default",
             pattern: "{controller=Player}/{action=GetPlayer}/{id?}");
 
+                endpoints.MapControllerRoute(
+            name: "default",
+            pattern: "{controller=Chatbox}/{action=Index}");
+
             });
         }
     }
