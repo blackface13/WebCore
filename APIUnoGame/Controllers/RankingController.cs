@@ -32,7 +32,7 @@ namespace APIUnoGame.Controllers
             return await _context.Ranking.OrderByDescending(x => x.UnoBasicPoint+ x.UnoExtensionPoint).Take(10).ToListAsync();
         }
 
-        // GET: api/Ranking/5
+        // GET: api/Ranking
         [HttpGet("rankingglobal")]
         public async Task<ActionResult<IEnumerable<Ranking>>> GetRankingGlobal()
         {
@@ -40,10 +40,17 @@ namespace APIUnoGame.Controllers
         }
 
         // GET: api/Ranking/5
-        [HttpGet("ranking/{codeCountry}")]
-        public async Task<ActionResult<IEnumerable<Ranking>>> GetRankingGlobal(string codeCountry)
+        [HttpGet("rankingglobal/{quantity}")]
+        public async Task<ActionResult<IEnumerable<Ranking>>> GetRankingGlobal(int quantity)
         {
-            return await _context.Ranking.Where(x => x.Country == codeCountry).OrderByDescending(x => x.UnoBasicPoint + x.UnoExtensionPoint).Take(10).ToListAsync();
+            return await _context.Ranking.OrderByDescending(x => x.UnoBasicPoint + x.UnoExtensionPoint).Take(quantity).ToListAsync();
+        }
+
+        // GET: ranking theo quốc gia
+        [HttpGet("ranking/{codeCountry}/{quantity}")]
+        public async Task<ActionResult<IEnumerable<Ranking>>> GetRankingGlobal(string codeCountry, int quantity)
+        {
+            return await _context.Ranking.Where(x => x.Country == codeCountry).OrderByDescending(x => x.UnoBasicPoint + x.UnoExtensionPoint).Take(quantity).ToListAsync();
         }
 
         // PUT: api/Ranking/5

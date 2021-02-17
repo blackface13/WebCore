@@ -115,7 +115,7 @@ namespace APIGame.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("getuploadfileinfor")]
-        public async Task<FileStreamResult> DownloadUpdateFileInfor()
+        public FileStreamResult DownloadUpdateFileInfor()
         {
             var stream = System.IO.File.OpenRead(AutoUpdateSettings.InforUpdateFileName);
             return new FileStreamResult(stream, "application/octet-stream") { FileDownloadName = Path.GetFileName(AutoUpdateSettings.InforUpdateFileName) };
