@@ -54,6 +54,10 @@ namespace APICore
         name: "default",
         pattern: "{controller=AutoUpdate}/{action=Get}/{id?}");
 
+                endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=AutoUpdateRun2Backup}/{action=Index}");
+
             });
         }
     }

@@ -16,7 +16,7 @@ namespace APICore.Controllers
     {
         public IActionResult Index(string id)
         {
-            var a = Path.GetFileNameWithoutExtension("DevExpress.XtraGauges.v19.1.Presets.xml");
+            //var a = Path.GetFileNameWithoutExtension("DevExpress.XtraGauges.v19.1.Presets.xml");
             return Ok("BlackFace API");
         }
     }
