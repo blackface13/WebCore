@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APIGame", "APIGame\APIGame.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APIUnoGame", "APIUnoGame\APIUnoGame.csproj", "{5A183683-7485-4F7A-9B44-F173176CAF47}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkullTribalIntrusionServer", "SkullTribalIntrusionServer\SkullTribalIntrusionServer\SkullTribalIntrusionServer.csproj", "{FC8661E8-5E5E-40C4-9551-93FC95B3DE6D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{5A183683-7485-4F7A-9B44-F173176CAF47}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5A183683-7485-4F7A-9B44-F173176CAF47}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5A183683-7485-4F7A-9B44-F173176CAF47}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC8661E8-5E5E-40C4-9551-93FC95B3DE6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC8661E8-5E5E-40C4-9551-93FC95B3DE6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC8661E8-5E5E-40C4-9551-93FC95B3DE6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC8661E8-5E5E-40C4-9551-93FC95B3DE6D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
