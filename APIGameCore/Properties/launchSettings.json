@@ -4,20 +4,20 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:61150",
-      "sslPort": 44392
+      "applicationUrl": "http://localhost:32370",
+      "sslPort": 44348
     }
   },
   "profiles": {
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "api/message",
+      "launchUrl": "weatherforecast",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "SkullTribalIntrusionServer": {
+    "APIGameCore": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "weatherforecast",
