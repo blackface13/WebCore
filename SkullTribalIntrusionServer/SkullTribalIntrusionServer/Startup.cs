@@ -21,7 +21,7 @@ namespace SkullTribalIntrusionServer
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddSignalR();
+            //services.AddSignalR();
             services.AddDbContext<GameDBContext>(options =>
               options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
         }
@@ -45,8 +45,11 @@ namespace SkullTribalIntrusionServer
                 endpoints.MapControllers();
                 endpoints.MapControllerRoute(
         name: "default",
-        pattern: "{controller=Message}/{action=Get}");
+        pattern: "{controller=Message}/{action=Get2}");
 
+        //        endpoints.MapControllerRoute(
+        //name: "default",
+        //pattern: "{controller=SyncData}/{action=Get}");
             });
         }
     }

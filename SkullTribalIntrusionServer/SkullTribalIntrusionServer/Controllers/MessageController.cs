@@ -29,6 +29,13 @@ namespace SkullTribalIntrusionServer.Controllers
             return await _context.Players.ToListAsync();
         }
 
+        // GET api/<MessageController>/5
+        [HttpGet("tank")]
+        public IActionResult Tank()
+        {
+            return Ok("OK");
+        }
+
         // POST api/<MessageController>
         [HttpPost]
         public void Post([FromBody] string value)

@@ -21,7 +21,7 @@ namespace SkullTribalIntrusionServer.Infrastructure.Entities
         public long ShotSuperHighAngle { get; set; }//Số lần bắn trúng góc siêu cao
         public long HittedNumber { get; set; }//Số lần bị bắn
         public long HittedHeadNumber { get; set; }//Số lần bị bắn trúng đàu 
-        public decimal DamageCreated { get; set; }//Số dmg gây ra
-        public decimal DamageReceived { get; set; }//Số dmg nhận vào
+        public float DamageCreated { get; set; }//Số dmg gây ra
+        public float DamageReceived { get; set; }//Số dmg nhận vào
     }
 }
