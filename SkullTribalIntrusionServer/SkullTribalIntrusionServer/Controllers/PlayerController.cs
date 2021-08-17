@@ -26,23 +26,23 @@ namespace SkullTribalIntrusionServer.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok("BlackFace API");
+            return Ok("BlackFace API 2");
         }
 
         [HttpGet("GetById/{playerId}")]
-        public async Task<ActionResult<Players>> GetById(Guid playerId)
+        public async Task<ActionResult<PlayerModel>> GetById(Guid playerId)
         {
             return await _context.Players.FindAsync(playerId);
         }
 
         [HttpGet("GetAll")]
-        public async Task<ActionResult<IEnumerable<Players>>> GetAll()
+        public async Task<ActionResult<IEnumerable<PlayerModel>>> GetAll()
         {
             return await _context.Players.ToListAsync();
         }
 
         [HttpPost("Update")]
-        public async Task<IActionResult> Update(Players p)
+        public async Task<IActionResult> Update(PlayerModel p)
         {
             try
             {
@@ -58,17 +58,16 @@ namespace SkullTribalIntrusionServer.Controllers
 
         // GET api/<SyncDataController>/5
         [HttpGet("tank")]
-        public IActionResult tank()
+        public async Task<IActionResult> tank()
         {
-            CreatedAtAction("Update", new Players { PlayerId = Guid.Parse("6cb0490f-8d2a-45e1-bccd-033f73bd1e84") });
-            return Ok("OK");
+            return await Update(new PlayerModel { PlayerId = Guid.Parse("6cb0490f-8d2a-45e1-bccd-033f73bd1e84") });
         }
 
         // GET api/<SyncDataController>/5
         [HttpGet("createplayer")]
-        public async Task<ActionResult<IEnumerable<Players>>> CreatePlayerRand()
+        public async Task<ActionResult<IEnumerable<PlayerModel>>> CreatePlayerRand()
         {
-            var newP = new Players()
+            var newP = new PlayerModel()
             {
                 PlayerId = Guid.NewGuid(),
                 PlayerName = RandomString(10),
@@ -98,9 +97,9 @@ namespace SkullTribalIntrusionServer.Controllers
         {
         }
 
-        //Xoá toàn bộ dữ liệu người dùng
+        //Xoá người dùng
         [HttpDelete]
-        public bool Delete(Players player)
+        public bool Delete(PlayerModel player)
         {
             try
             {

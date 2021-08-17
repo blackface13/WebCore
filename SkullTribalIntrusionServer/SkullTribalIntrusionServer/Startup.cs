@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SkullTribalIntrusionServer.CoreBase;
+using SkullTribalIntrusionServer.ServerSystems.Languages;
 
 namespace SkullTribalIntrusionServer
 {
@@ -13,6 +14,7 @@ namespace SkullTribalIntrusionServer
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            Language.CreateLanguage();
         }
 
         public IConfiguration Configuration { get; }

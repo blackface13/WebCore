@@ -24,7 +24,7 @@ namespace SkullTribalIntrusionServer.Controllers
 
         // GET api/<MessageController>/5
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Players>>> Get2()
+        public async Task<ActionResult<IEnumerable<PlayerModel>>> Get2()
         {
             return await _context.Players.ToListAsync();
         }
