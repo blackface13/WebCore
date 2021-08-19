@@ -13,6 +13,7 @@ namespace SkullTribalIntrusionServer.Infrastructure.Entities
         /// 2: nhiệm vụ
         /// </summary>
         public int ItemTypeMode { get; set; }
+        public Guid PlayerId { get; set; } 
         public Guid ItemGuidId { get; set; } //Mã item để đồng bộ với server
         public int ItemId { get; set; }
         public float Price { get; set; }

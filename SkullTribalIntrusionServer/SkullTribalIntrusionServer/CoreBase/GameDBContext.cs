@@ -13,6 +13,6 @@ namespace SkullTribalIntrusionServer.CoreBase
     : base(options)
         { }
 
-        public DbSet<PlayerModel> Players { get; set; }//Nhận thưởng hàng ngày
+        public DbSet<PlayerModel> Players { get; set; }
     }
 }

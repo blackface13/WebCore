@@ -14,26 +14,11 @@ namespace SkullTribalIntrusionServer.Infrastructure.Entities
         public float Defense { get; set; }
         public float Health { get; set; }
         public float HealingPerSecond { get; set; }//Hồi máu mỗi giây
-        private float _breakDefense { get; set; }//Xuyên giáp
-        public float BreakDefense
-        {
-            get { return _breakDefense; }
-            set { _breakDefense = value > 10000f ? 10000 : value; }
-        }
-        private float _critical { get; set; }
-        /// <summary>
-        /// Tỉ lệ chí mạng, 1 = 0.01%, 10000 = 100%
-        /// </summary>
-        public float Critical
-        {
-            get { return _critical; }
-            set { _critical = value > 10000f ? 10000 : value; }
-        }
+        public float BreakDefense { get; set; }
+        public float Critical { get; set; }
         public float AtkSpeed { get; set; }//Tốc độ dương cung
         public float WalkSpeed { get; set; }
         public List<ItemModel> ItemsData { get; set; }//Dữ liệu item 
-
-
 
         #region Các chỉ số của người chơi (ko phải chỉ số nhân vật)
         [Key]

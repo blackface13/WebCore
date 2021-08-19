@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+//using Z.EntityFramework;
+//using Z.BulkOperations;
 
 namespace SkullTribalIntrusionServer.Controllers
 {
@@ -46,6 +48,7 @@ namespace SkullTribalIntrusionServer.Controllers
         {
             try
             {
+                //DbContextExtensions.BulkUpdate(_context.Players.GetContext(), _context.Players.Where(x => x.Exp == 0));
                 _context.Players.Update(p);
                 await _context.SaveChangesAsync();
                 return CreatedAtAction("Response", new ResponseModel { Res = Systems.State.Success });
