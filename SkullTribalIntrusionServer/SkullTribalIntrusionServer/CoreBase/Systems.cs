@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 
 namespace SkullTribalIntrusionServer.CoreBase
 {
@@ -20,6 +21,22 @@ namespace SkullTribalIntrusionServer.CoreBase
         public static int GetTimeNowToInteger()
         {
             return (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+        }
+
+        /// <summary>
+        /// Chuyển list -> chuỗi ngăn cách bởi ';', dành cho lưu vào data
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static string ConvertListToSplitString(IList input)
+        {
+            if (input == null || input.Count <= 0)
+                return null;
+
+            string result = "";
+            foreach (var item in input)
+                result = item.ToString() + ";";
+            return result;
         }
     }
 }

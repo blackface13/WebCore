@@ -14,7 +14,7 @@ namespace SkullTribalIntrusionServer
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            Language.CreateLanguage();
+            //Language.CreateLanguage();
         }
 
         public IConfiguration Configuration { get; }

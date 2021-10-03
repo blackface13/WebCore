@@ -9,9 +9,9 @@ namespace SkullTribalIntrusionServer.ServerSystems.Languages
     {
         public static Dictionary<int, string> Lang;
 
-        public static void CreateLanguage()
-        {
-            Lang.Add(100, "");
-        }
+        //public static void CreateLanguage()
+        //{
+        //    Lang.Add(100, "");
+        //}
     }
 }

@@ -1,0 +1,9 @@
+﻿CREATE TABLE [dbo].[PlayerItems]
+(
+	[ItemGuidId] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY, 
+	[PlayerId] UNIQUEIDENTIFIER NOT NULL, 
+    [ItemTypeMode] INT NULL DEFAULT -1, 
+    [ItemId] INT NULL DEFAULT -1, 
+    [Index] INT NULL DEFAULT -1, 
+    [Quantity] INT NULL DEFAULT -1, 
+)

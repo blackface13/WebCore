@@ -30,29 +30,51 @@ namespace SkullTribalIntrusionServer.Controllers
         }
 
         [HttpGet("GetById/{playerId}")]
-        public async Task<ActionResult<PlayerModel>> GetById(Guid playerId)
+        public async Task<ActionResult<PlayerEntity>> GetById(Guid playerId)
         {
-            return await _context.Players.FindAsync(playerId);
+            var result = await _context.Players.FindAsync(playerId);
+            return result != null ? result : null;
         }
 
         [HttpGet("GetAll")]
-        public async Task<ActionResult<IEnumerable<PlayerModel>>> GetAll()
+        public async Task<ActionResult<IEnumerable<PlayerEntity>>> GetAll()
         {
             return await _context.Players.ToListAsync();
         }
 
         [HttpPost("Update")]
-        public async Task<IActionResult> Update(PlayerModel p)
+        public async Task<IActionResult> Update(PlayerEntity p)
         {
             try
             {
-                _context.Players.Update(p);
-                await _context.SaveChangesAsync();
+                //Chuyển đổi dữ liệu các list để đẩy vào DB
+                p.ArrowsBagValues = Systems.ConvertListToSplitString(p.ArrowsBag);
+                p.ArrowsBuyedValues = Systems.ConvertListToSplitString(p.ArrowsBuyed);
+                //var itemExist2 = _context.PlayerItems.Where(x => x.PlayerId.Equals(p.PlayerId)).ToList();
+
+                //Update/Add player
+                var player = _context.Players.FindAsync(p.PlayerId).Result;
+                if (player != null)
+                    await DbContextExtensions.SingleUpdateAsync(_context, p);
+                //_context.Players.Update(p);
+                else
+                    await DbContextExtensions.SingleInsertAsync(_context, p);
+                //await _context.Players.AddAsync(p);
+
+                //Update item
+                var itemExist = _context.PlayerItems.Where(x => x.PlayerId == p.PlayerId);
+                if (itemExist != null)
+                    await DbContextExtensions.BulkDeleteAsync(_context, itemExist);
+                //_context.PlayerItems.RemoveRange(itemExist);
+                //await _context.PlayerItems.AddRangeAsync(p.ItemsData);
+                await DbContextExtensions.BulkInsertAsync(_context, p.ItemsData);
+
+                await DbContextExtensions.BulkSaveChangesAsync(_context);
                 return CreatedAtAction("Response", new ResponseModel { Res = Systems.State.Success });
             }
-            catch
+            catch (Exception ex)
             {
-                return CreatedAtAction("Response", new ResponseModel { Res = Systems.State.Failed });
+                return CreatedAtAction("Response", new ResponseModel { Res = Systems.State.Failed, Messages = ex.Message });
             }
         }
 
@@ -60,14 +82,14 @@ namespace SkullTribalIntrusionServer.Controllers
         [HttpGet("tank")]
         public async Task<IActionResult> tank()
         {
-            return await Update(new PlayerModel { PlayerId = Guid.Parse("6cb0490f-8d2a-45e1-bccd-033f73bd1e84") });
+            return await Update(new PlayerEntity { PlayerId = Guid.Parse("6cb0490f-8d2a-45e1-bccd-033f73bd1e84") });
         }
 
         // GET api/<SyncDataController>/5
         [HttpGet("createplayer")]
-        public async Task<ActionResult<IEnumerable<PlayerModel>>> CreatePlayerRand()
+        public async Task<ActionResult<IEnumerable<PlayerEntity>>> CreatePlayerRand()
         {
-            var newP = new PlayerModel()
+            var newP = new PlayerEntity()
             {
                 PlayerId = Guid.NewGuid(),
                 PlayerName = RandomString(10),
@@ -99,7 +121,7 @@ namespace SkullTribalIntrusionServer.Controllers
 
         //Xoá người dùng
         [HttpDelete]
-        public bool Delete(PlayerModel player)
+        public bool Delete(PlayerEntity player)
         {
             try
             {
