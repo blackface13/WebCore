@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SkullTribalIntrusionServer.CoreBase;
 using SkullTribalIntrusionServer.Infrastructure.Entities;
+using SkullTribalIntrusionServer.Infrastructure.Models;
 using SkullTribalIntrusionServer.Models;
 using System;
 using System.Collections.Generic;
@@ -42,35 +44,51 @@ namespace SkullTribalIntrusionServer.Controllers
             return await _context.Players.ToListAsync();
         }
 
-        [HttpPost("Update")]
-        public async Task<IActionResult> Update(PlayerEntity p)
+        /// <summary>
+        /// Đồng bộ dữ liệu
+        /// </summary>
+        /// <param name="p"></param>
+        /// <returns></returns>
+        [HttpPost("Sync")]
+        public async Task<IActionResult> Sync(PlayerModel p)
         {
             try
             {
                 //Chuyển đổi dữ liệu các list để đẩy vào DB
                 p.ArrowsBagValues = Systems.ConvertListToSplitString(p.ArrowsBag);
                 p.ArrowsBuyedValues = Systems.ConvertListToSplitString(p.ArrowsBuyed);
-                //var itemExist2 = _context.PlayerItems.Where(x => x.PlayerId.Equals(p.PlayerId)).ToList();
 
-                //Update/Add player
+                //Kiểm tra tồn tại player
                 var player = _context.Players.FindAsync(p.PlayerId).Result;
-                if (player != null)
-                    await DbContextExtensions.SingleUpdateAsync(_context, p);
-                //_context.Players.Update(p);
+                if (player != null)//Nếu tồn tại
+                {
+                    //Check thời gian đồng bộ hoá, nếu client cũ hơn => hỏi client xem có get dữ liệu từ server về ko
+                    if (player.LastTimeSync > p.LastTimeSync && !p.IsForcedSync)
+                        return CreatedAtAction("Response", new ResponseModel { Res = Systems.State.Success, ErrorCode = 001 });
+
+                    //Đồng bộ dữ liệu từ client lên
+                    p.LastTimeSync = Systems.GetTimeNowToInteger();
+                    await DbContextExtensions.SingleUpdateAsync(_context, Systems.Mapper.Map<PlayerEntity>(p));
+                }
                 else
-                    await DbContextExtensions.SingleInsertAsync(_context, p);
-                //await _context.Players.AddAsync(p);
+                {
+                    p.LastTimeSync = Systems.GetTimeNowToInteger();
+                    await DbContextExtensions.SingleInsertAsync(_context, Systems.Mapper.Map<PlayerEntity>(p));
+                }
 
                 //Update item
-                var itemExist = _context.PlayerItems.Where(x => x.PlayerId == p.PlayerId);
-                if (itemExist != null)
+                var itemExist = await _context.PlayerItems.Where(x => x.PlayerId == p.PlayerId).ToListAsync();
+
+                //Xoá item cũ khỏi db
+                if (itemExist != null && itemExist.Count > 0)
                     await DbContextExtensions.BulkDeleteAsync(_context, itemExist);
-                //_context.PlayerItems.RemoveRange(itemExist);
-                //await _context.PlayerItems.AddRangeAsync(p.ItemsData);
+
+                //Insert item mới
                 await DbContextExtensions.BulkInsertAsync(_context, p.ItemsData);
 
+                //Lưu dữ liệu vào DB
                 await DbContextExtensions.BulkSaveChangesAsync(_context);
-                return CreatedAtAction("Response", new ResponseModel { Res = Systems.State.Success });
+                return CreatedAtAction("Response", new ResponseModel { Res = Systems.State.Success, Messages = p.LastTimeSync.ToString() });//Messages trả về là time đồng bộ hoá, client sẽ nhận và save số này
             }
             catch (Exception ex)
             {
@@ -78,11 +96,15 @@ namespace SkullTribalIntrusionServer.Controllers
             }
         }
 
-        // GET api/<SyncDataController>/5
-        [HttpGet("tank")]
-        public async Task<IActionResult> tank()
+        /// <summary>
+        /// Kiểm tra xem lần đồng bộ cuối cùng giữa client và server có khớp không
+        /// </summary>
+        /// <param name="p"></param>
+        /// <returns></returns>
+        private async Task<bool> CheckLastTimeSync(PlayerEntity p)
         {
-            return await Update(new PlayerEntity { PlayerId = Guid.Parse("6cb0490f-8d2a-45e1-bccd-033f73bd1e84") });
+
+            return await Task.FromResult(false);
         }
 
         // GET api/<SyncDataController>/5

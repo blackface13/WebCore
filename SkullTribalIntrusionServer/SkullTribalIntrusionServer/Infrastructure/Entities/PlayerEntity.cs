@@ -9,7 +9,7 @@ namespace SkullTribalIntrusionServer.Infrastructure.Entities
     public class PlayerEntity
     {
         public int Level { get; set; }
-        public double Exp { get; set; }
+        public float Exp { get; set; }
         public List<ItemEntity> ItemsData { get; set; }//Dữ liệu item 
 
         #region Các chỉ số của người chơi (ko phải chỉ số nhân vật)
@@ -32,6 +32,7 @@ namespace SkullTribalIntrusionServer.Infrastructure.Entities
         public long ArrowHeight { get; set; }//Số lượng mũi tên góc cao
         public long ArrowSuperHeight { get; set; }////Số lượng mũi tên góc siêu cao
         public long TotalBattleTime { get; set; }//Tổng số thời gian trong trận, tính theo giây
+        public int LastTimeSync { get; set; }//Thời gian cuối cùng đồng bộ
         #endregion
 
         public List<int> ArrowsBag

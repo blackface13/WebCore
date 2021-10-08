@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SkullTribalIntrusionServer.CoreBase;
+using SkullTribalIntrusionServer.ServerSystems;
 using SkullTribalIntrusionServer.ServerSystems.Languages;
 
 namespace SkullTribalIntrusionServer
@@ -53,6 +55,15 @@ namespace SkullTribalIntrusionServer
         //name: "default",
         //pattern: "{controller=SyncData}/{action=Get}");
             });
+
+            //Khởi tạo automapper
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new MappingConfig());
+            });
+            var mapper = config.CreateMapper();
+
+            Systems.Mapper = new Mapper(config);
         }
     }
 }

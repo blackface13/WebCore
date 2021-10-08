@@ -1,10 +1,13 @@
-﻿using System;
+﻿using AutoMapper;
+using System;
 using System.Collections;
 
 namespace SkullTribalIntrusionServer.CoreBase
 {
     public static class Systems
     {
+        public static Mapper Mapper;
+
         public enum State//Trạng thái request
         {
             Waiting, //Trạng thái chờ kết nối server
