@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using SkullTribalIntrusionServer.CoreBase;
 using SkullTribalIntrusionServer.Infrastructure.Entities;
 using SkullTribalIntrusionServer.Infrastructure.Models;
 using System;

@@ -12,6 +12,7 @@ namespace SkullTribalIntrusionServer.Infrastructure.Models
         public int Level { get; set; }
         public float Exp { get; set; }
         public List<ItemEntity> ItemsData { get; set; }//Dữ liệu item 
+        public string HWID { get; set; }//Mã phần cứng thiết bị
 
         #region Các chỉ số của người chơi (ko phải chỉ số nhân vật)
         public Guid PlayerId { get; set; }
@@ -35,32 +36,6 @@ namespace SkullTribalIntrusionServer.Infrastructure.Models
         public int LastTimeSync { get; set; }//Thời gian cuối cùng đồng bộ
         #endregion
 
-        public List<int> ArrowsBag
-        {
-            get
-            {
-                if (ArrowsBagValues != null)
-                {
-                    return ArrowsBagValues.Split(';').Select(int.Parse).ToList();
-                }
-                return null;
-            }
-        }
-        public List<int> ArrowsBuyed
-        {
-            get
-            {
-                if (ArrowsBuyedValues != null)
-                {
-                    return ArrowsBuyedValues.Split(';').Select(int.Parse).ToList();
-                }
-                return null;
-            }
-        }
-
-        public string ArrowsBagValues { get; set; }
-        public string ArrowsBuyedValues { get; set; }
-
         public PlayerModel Clone()
         {
             return (PlayerModel)MemberwiseClone();
@@ -69,6 +44,8 @@ namespace SkullTribalIntrusionServer.Infrastructure.Models
 
         #region Field mở rộng
         public bool IsForcedSync { get; set; }//Buộc đồng bộ hoá. true = đồng bộ, false = check
+        public List<int> ArrowsBag { get; set; }
+        public List<int> ArrowsBuyed { get; set; }
         #endregion
     }
 }

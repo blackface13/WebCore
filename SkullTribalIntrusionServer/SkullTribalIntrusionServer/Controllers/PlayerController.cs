@@ -32,10 +32,26 @@ namespace SkullTribalIntrusionServer.Controllers
         }
 
         [HttpGet("GetById/{playerId}")]
-        public async Task<ActionResult<PlayerEntity>> GetById(Guid playerId)
+        public async Task<IActionResult> GetById(Guid playerId)
         {
-            var result = await _context.Players.FindAsync(playerId);
-            return result != null ? result : null;
+            //Tìm player trong DB
+            var resultTemp = await _context.Players.FindAsync(playerId);
+            PlayerModel result;
+            if (resultTemp != null)
+                result = Systems.Mapper.Map<PlayerModel>(resultTemp);
+            else
+                return CreatedAtAction("Response", new ResponseModel { Res = Systems.State.Success, ErrorCode = 2 });
+
+            //Lấy items của player nếu có
+            result.ItemsData = await _context.PlayerItems.Where(x => x.PlayerId == result.PlayerId).ToListAsync();
+
+            //Chuyển đổi dữ liệu mũi tên
+            if (resultTemp.ArrowsBagValues != null)
+                result.ArrowsBag = Systems.ConvertStringSplitToList<int>(resultTemp.ArrowsBagValues);
+            if (resultTemp.ArrowsBuyedValues != null)
+                result.ArrowsBuyed = Systems.ConvertStringSplitToList<int>(resultTemp.ArrowsBuyedValues);
+
+            return CreatedAtAction("Response", new ResponseModel { Res = Systems.State.Success, Results = result != null ? result : null });
         }
 
         [HttpGet("GetAll")]
@@ -54,41 +70,48 @@ namespace SkullTribalIntrusionServer.Controllers
         {
             try
             {
+                PlayerEntity result = Systems.Mapper.Map<PlayerEntity>(p);
+
                 //Chuyển đổi dữ liệu các list để đẩy vào DB
-                p.ArrowsBagValues = Systems.ConvertListToSplitString(p.ArrowsBag);
-                p.ArrowsBuyedValues = Systems.ConvertListToSplitString(p.ArrowsBuyed);
+                result.ArrowsBagValues = Systems.ConvertListToSplitString(p.ArrowsBag);
+                result.ArrowsBuyedValues = Systems.ConvertListToSplitString(p.ArrowsBuyed);
+                result.LastTimeSync = Systems.GetTimeNowToInteger();
+                result.HWID = result.HWID.Trim();
 
                 //Kiểm tra tồn tại player
-                var player = _context.Players.FindAsync(p.PlayerId).Result;
+                var player = _context.Players.FindAsync(result.PlayerId).Result;
                 if (player != null)//Nếu tồn tại
                 {
+                    //Check HWID, nếu khác nhau, trả về câu hỏi
+                    if (player.HWID.Trim() != p.HWID.Trim() && !p.IsForcedSync)
+                        return CreatedAtAction("Response", new ResponseModel { Res = Systems.State.Success, ErrorCode = 3 });
+
                     //Check thời gian đồng bộ hoá, nếu client cũ hơn => hỏi client xem có get dữ liệu từ server về ko
                     if (player.LastTimeSync > p.LastTimeSync && !p.IsForcedSync)
-                        return CreatedAtAction("Response", new ResponseModel { Res = Systems.State.Success, ErrorCode = 001 });
+                        return CreatedAtAction("Response", new ResponseModel { Res = Systems.State.Success, ErrorCode = 1 });
 
-                    //Đồng bộ dữ liệu từ client lên
-                    p.LastTimeSync = Systems.GetTimeNowToInteger();
-                    await DbContextExtensions.SingleUpdateAsync(_context, Systems.Mapper.Map<PlayerEntity>(p));
+                    await DbContextExtensions.SingleUpdateAsync(_context, result);
                 }
                 else
                 {
-                    p.LastTimeSync = Systems.GetTimeNowToInteger();
-                    await DbContextExtensions.SingleInsertAsync(_context, Systems.Mapper.Map<PlayerEntity>(p));
+                    await DbContextExtensions.SingleInsertAsync(_context, result);
                 }
 
-                //Update item
-                var itemExist = await _context.PlayerItems.Where(x => x.PlayerId == p.PlayerId).ToListAsync();
+                //Find item
+                var itemExist = await _context.PlayerItems.Where(x => x.PlayerId == result.PlayerId).ToListAsync();
 
                 //Xoá item cũ khỏi db
                 if (itemExist != null && itemExist.Count > 0)
                     await DbContextExtensions.BulkDeleteAsync(_context, itemExist);
 
                 //Insert item mới
-                await DbContextExtensions.BulkInsertAsync(_context, p.ItemsData);
+                foreach (var item in result.ItemsData)
+                    item.PlayerId = result.PlayerId;
+                await DbContextExtensions.BulkInsertAsync(_context, result.ItemsData);
 
                 //Lưu dữ liệu vào DB
                 await DbContextExtensions.BulkSaveChangesAsync(_context);
-                return CreatedAtAction("Response", new ResponseModel { Res = Systems.State.Success, Messages = p.LastTimeSync.ToString() });//Messages trả về là time đồng bộ hoá, client sẽ nhận và save số này
+                return CreatedAtAction("Response", new ResponseModel { Res = Systems.State.Success, Messages = result.LastTimeSync.ToString() });//Messages trả về là time đồng bộ hoá, client sẽ nhận và save số này
             }
             catch (Exception ex)
             {
@@ -97,11 +120,64 @@ namespace SkullTribalIntrusionServer.Controllers
         }
 
         /// <summary>
+        /// Đồng bộ dữ liệu, client chạy ngầm sẽ gọi hàm này
+        /// </summary>
+        /// <param name="p"></param>
+        /// <returns></returns>
+        [HttpPut("AutoSync")]
+        public void AutoSync(PlayerModel p)
+        {
+            try
+            {
+                PlayerEntity result = Systems.Mapper.Map<PlayerEntity>(p);
+
+                //Chuyển đổi dữ liệu các list để đẩy vào DB
+                result.ArrowsBagValues = Systems.ConvertListToSplitString(p.ArrowsBag);
+                result.ArrowsBuyedValues = Systems.ConvertListToSplitString(p.ArrowsBuyed);
+                result.LastTimeSync = Systems.GetTimeNowToInteger();
+                result.HWID = result.HWID.Trim();
+
+                //Kiểm tra tồn tại player
+                var player = _context.Players.FindAsync(result.PlayerId).Result;
+                if (player != null)//Nếu tồn tại
+                {
+                    //Check HWID, nếu khác nhau, ko đồng bộ
+                    if (player.HWID.Trim() != p.HWID.Trim())
+                        return;
+
+                    DbContextExtensions.SingleUpdate(_context, result);
+                }
+                else
+                {
+                    DbContextExtensions.SingleInsert(_context, result);
+                }
+
+                //Find item
+                var itemExist = _context.PlayerItems.Where(x => x.PlayerId == result.PlayerId).ToList();
+
+                //Xoá item cũ khỏi db
+                if (itemExist != null && itemExist.Count > 0)
+                    DbContextExtensions.BulkDelete(_context, itemExist);
+
+                //Insert item mới
+                foreach (var item in result.ItemsData)
+                    item.PlayerId = result.PlayerId;
+                DbContextExtensions.BulkInsert(_context, result.ItemsData);
+
+                //Lưu dữ liệu vào DB
+                DbContextExtensions.BulkSaveChanges(_context);
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
+        /// <summary>
         /// Kiểm tra xem lần đồng bộ cuối cùng giữa client và server có khớp không
         /// </summary>
         /// <param name="p"></param>
         /// <returns></returns>
-        private async Task<bool> CheckLastTimeSync(PlayerEntity p)
+        private async Task<bool> CheckLastTimeSync([FromBody] PlayerEntity p)
         {
 
             return await Task.FromResult(false);

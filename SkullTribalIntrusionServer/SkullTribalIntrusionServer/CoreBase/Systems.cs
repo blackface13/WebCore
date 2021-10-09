@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace SkullTribalIntrusionServer.CoreBase
 {
@@ -38,7 +39,25 @@ namespace SkullTribalIntrusionServer.CoreBase
 
             string result = "";
             foreach (var item in input)
-                result = item.ToString() + ";";
+                result += item.ToString() + ";";
+            return result;
+        }
+
+        /// <summary>
+        /// Chuyển đổi về dạng list với string ngăn cách bởi ';'
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static List<T> ConvertStringSplitToList<T>(string input)
+        {
+            List<T> result = new List<T>();
+            var arrayTemp = input.Split(';');
+            for (int i = 0; i < arrayTemp.Length; i++)
+            {
+                if (!string.IsNullOrEmpty(arrayTemp[i]))
+                    result.Add((T)Convert.ChangeType(arrayTemp[i], typeof(T)));
+            }
             return result;
         }
     }

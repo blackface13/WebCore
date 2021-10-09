@@ -22,6 +22,7 @@ CREATE TABLE [dbo].[Players]
     ArrowSuperHeight BIGINT NULL DEFAULT 0,
     TotalBattleTime BIGINT NULL DEFAULT 0,
     LastTimeSync INT NULL DEFAULT 0,
+    HWID Nvarchar(100) NULL,
     ArrowsBagValues Nvarchar(20) NULL,
     ArrowsBuyedValues Nvarchar(20) NULL
 )
