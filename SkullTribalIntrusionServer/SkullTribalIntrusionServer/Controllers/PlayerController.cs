@@ -76,7 +76,7 @@ namespace SkullTribalIntrusionServer.Controllers
                 result.ArrowsBagValues = Systems.ConvertListToSplitString(p.ArrowsBag);
                 result.ArrowsBuyedValues = Systems.ConvertListToSplitString(p.ArrowsBuyed);
                 result.LastTimeSync = Systems.GetTimeNowToInteger();
-                result.HWID = result.HWID.Trim();
+                result.HWID = result.HWID!= null? result.HWID.Trim(): result.HWID;
 
                 //Kiểm tra tồn tại player
                 var player = _context.Players.FindAsync(result.PlayerId).Result;
